@@ -21,6 +21,7 @@ The other settings should auto create a table in DynamoDB when the application s
 These are instructions for Linux.
 
 > uno$ sudo docker build -t uno/date .
+
 > uno$ sudo docker run -p 8080:8080 -t uno/date
 
 # Testing locally
@@ -29,8 +30,13 @@ In your browser go to
 
 > http://localhost:8080/date/difference?fromDate=01.01.2020&toDate=05.01.2020
 
+# Works in progress
 
-# Pushing to ECS
+## Error responses
+
+There are suitable HTTP codes for the error responses, but the error handling is pretty bad.
+
+## Pushing to ECS
 
 Create an ECR repository and give it a name. I've named mine date-diff.
 Run the following commands. You may also need to run
@@ -40,7 +46,12 @@ Run the following commands. You may also need to run
 If you have not already done so.
 
 > aws ecr get-login --region us-east-2 --no-include-email
+
 > sudo <output of above>
+
 > sudo docker image ls
+
 > sudo docker tag <image>:latest 345495424718.dkr.ecr.us-east-2.amazonaws.com/date-diff:latest
+
 > sudo docker push 345495424718.dkr.ecr.us-east-2.amazonaws.com/date-diff:latest
+
