@@ -1,7 +1,19 @@
+# About
+
+This is a Spring Boot application that returns the number of days between 2 dates, exclusive of the start and end dates.
+E.g. fromDate=01.01.2020, toDate=03.01.2020, returns 1. 
+
+A log of the result is stored in DynamoDB. The table needed for this is created at application start up. 
+So only the credentials needed access your DB should be needed.
+
+The record contains: fromDate, toDate, difference, id.
+Where id is just the Java nano time for now.
+
 # IMPORTANT!
 
 This is not the root of the project.
-You need to go one level down.
+You need to go one level down before running any of these commands.
+These intructions are for Linux!
 
 > cd uno 
 
