@@ -16,18 +16,19 @@ The other settings should auto create a table in DynamoDB when the application s
 # Running locally
 > uno$ mvn spring-boot:run 
 
-## Testing locally
+# Docker
+
+These are instructions for Linux.
+
+> uno$ sudo docker build -t uno/date .
+> uno$ sudo docker run -p 8080:8080 -t uno/date
+
+# Testing locally
 
 In your browser go to
 
 > http://localhost:8080/date/difference?fromDate=01.01.2020&toDate=05.01.2020
 
-# Docker
-
-These are instructions for Linux 
-
-> uno$ sudo docker build -t uno/date .
-> uno$ sudo docker run -p 8080:8080 -t uno/date
 
 # Pushing to ECS
 
