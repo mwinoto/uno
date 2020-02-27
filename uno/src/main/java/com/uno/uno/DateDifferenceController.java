@@ -3,15 +3,28 @@ package com.uno.uno;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+import com.uno.uno.dynamodb.UnoDateDTO;
+import com.uno.uno.dynamodb.UnoDateRequestsRepository;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-
+/**
+ * "Please explicitly calculate the number of days between the two dates - do not use any built-in functions."
+ */
 @RestController
 class DateDifferenceController {
+
+    @Autowired
+    AmazonDynamoDB amazonDynamoDB;
+
+    @Autowired
+    UnoDateRequestsRepository unoDateRequestsRepository;
 
     // Regex to test for date format: DD.MM.YYYY
     private static final Pattern DATE_PATTERN = Pattern.compile("\\d{2,}\\.\\d{2,}\\.\\d{4,}");
@@ -71,6 +84,7 @@ class DateDifferenceController {
         if (!startDateMatcher.matches() || !endDateMatcher.matches()) {
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(null);
         }
+        //GYOF4mVJQZnbjchorbIuvWJ3JS7p5z6crKnw/8ZM
 
         UnoDate fromUnoDate = new UnoDate(fromDate);
         UnoDate toUnoDate = new UnoDate(toDate);
@@ -81,8 +95,13 @@ class DateDifferenceController {
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(null);
         }
 
+        int difference = findDifferenceInDates(fromUnoDate, toUnoDate);
+       
+        UnoDateDTO unoDateDTO = new UnoDateDTO(fromDate+"-"+toDate, fromDate, toDate, difference);
+        unoDateRequestsRepository.save(unoDateDTO);
+
         // Ok, now we can find the difference
-        return ResponseEntity.ok(findDifferenceInDates(fromUnoDate, toUnoDate));
+        return ResponseEntity.ok(difference);
     }
 
     protected int findDifferenceInDates(UnoDate fromDate, UnoDate toDate) {

@@ -4,18 +4,31 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+import com.uno.uno.dynamodb.UnoDateRequestsRepository;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 class DateDifferenceControllerTest {
 
+    @Mock
+    AmazonDynamoDB amazonDynamoDB;
+
+    @Mock
+    UnoDateRequestsRepository unoDateRequestsRepository;
+
+    @InjectMocks
     DateDifferenceController dateDifferenceController;
 
     @BeforeEach
     public void setup() {
-        dateDifferenceController = new DateDifferenceController();
+        MockitoAnnotations.initMocks(this);
     }
 
     @Test
@@ -52,7 +65,6 @@ class DateDifferenceControllerTest {
         assertEquals(1, response.getBody(), "Expected 1 to be returned");
     }
 
-
     @Test
     public void testCorrectInput_zeroDays() {
         ResponseEntity<Integer> response = dateDifferenceController.calculateDayDifference("01.01.1900", "02.01.1900");
@@ -60,14 +72,12 @@ class DateDifferenceControllerTest {
         assertEquals(0, response.getBody(), "Expected 0 to be returned");
     }
 
-
     @Test
     public void testCorrectInput_example1() {
         ResponseEntity<Integer> response = dateDifferenceController.calculateDayDifference("01.01.2020", "03.01.2020");
         assertEquals(HttpStatus.OK, response.getStatusCode(), "Controller thinks from date can be processed");
         assertEquals(1, response.getBody(), "Expected 1 to be returned");
     }
-
 
     @Test
     public void testCorrectInput_example2() {
@@ -79,13 +89,15 @@ class DateDifferenceControllerTest {
     @Test
     public void testIncorrectInput_start() {
         ResponseEntity<Integer> response = dateDifferenceController.calculateDayDifference("0.1.1900", "01.01.1901");
-        assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, response.getStatusCode(), "Controller thinks from date can be processed");
+        assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, response.getStatusCode(),
+                "Controller thinks from date can be processed");
     }
 
     @Test
     public void testIncorrectInput_end() {
         ResponseEntity<Integer> response = dateDifferenceController.calculateDayDifference("01.01.1900", "1.1.1901");
-        assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, response.getStatusCode(), "Controller thinks end date can be processed");
+        assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, response.getStatusCode(),
+                "Controller thinks end date can be processed");
     }
 
     @Test
@@ -109,7 +121,8 @@ class DateDifferenceControllerTest {
     @Test
     public void testIncorrectInput_notALeapYear() {
         ResponseEntity<Integer> response = dateDifferenceController.calculateDayDifference("01.01.1900", "29.02.1991");
-        assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, response.getStatusCode(), "Controller thinks 1991 is a leap year");
+        assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, response.getStatusCode(),
+                "Controller thinks 1991 is a leap year");
     }
 
     @Test
@@ -121,33 +134,29 @@ class DateDifferenceControllerTest {
     @Test
     public void testFromIsBeforeTo_daysApart() {
         assertTrue(
-            dateDifferenceController.isFromDateBeforeToDate(new UnoDate("01.01.1980"), new UnoDate("04.01.1980")),
-            "4th of Jan is after 1st of Jan"
-        );
+                dateDifferenceController.isFromDateBeforeToDate(new UnoDate("01.01.1980"), new UnoDate("04.01.1980")),
+                "4th of Jan is after 1st of Jan");
     }
 
     @Test
     public void testFromIsBeforeTo_monthsApart() {
         assertTrue(
-            dateDifferenceController.isFromDateBeforeToDate(new UnoDate("01.01.1980"), new UnoDate("01.03.1980")),
-            "March is after Jan"
-        );
+                dateDifferenceController.isFromDateBeforeToDate(new UnoDate("01.01.1980"), new UnoDate("01.03.1980")),
+                "March is after Jan");
     }
 
     @Test
     public void testFromIsNotBeforeTo_daysApart() {
         assertFalse(
-            dateDifferenceController.isFromDateBeforeToDate(new UnoDate("02.01.1980"), new UnoDate("01.01.1980")),
-            "2/1 is after 1/1"
-        );
+                dateDifferenceController.isFromDateBeforeToDate(new UnoDate("02.01.1980"), new UnoDate("01.01.1980")),
+                "2/1 is after 1/1");
     }
 
     @Test
     public void testFromIsNotBeforeTo_monthsApart() {
         assertFalse(
-            dateDifferenceController.isFromDateBeforeToDate(new UnoDate("02.04.1980"), new UnoDate("02.03.1980")),
-            "2/4 is after 2/3"
-        );
+                dateDifferenceController.isFromDateBeforeToDate(new UnoDate("02.04.1980"), new UnoDate("02.03.1980")),
+                "2/4 is after 2/3");
     }
 
 }
