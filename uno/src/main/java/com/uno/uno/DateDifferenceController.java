@@ -46,6 +46,16 @@ class DateDifferenceController {
                                                             30, //NOV
                                                             31 //DEC
                                                   };
+    /**
+     * Given 2 dates in the format DD.MM.YYYY where the fromDate is before the toDate,
+     * return the number of days between those 2 dates exclusive of the dates themselves.
+     * 
+     * This is a get request, but we'll be saving to the DB, so I'm not sure that's appropriate.
+     * 
+     * @param fromDate
+     * @param toDate
+     * @return
+     */
     @GetMapping(value="/date/difference")
     public ResponseEntity<Integer> calculateDayDifference(@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate) {
 
