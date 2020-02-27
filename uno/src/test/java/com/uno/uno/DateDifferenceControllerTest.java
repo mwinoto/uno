@@ -1,8 +1,6 @@
 package com.uno.uno;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.uno.uno.dynamodb.UnoDateRequestsRepository;
@@ -29,26 +27,6 @@ class DateDifferenceControllerTest {
     @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
-    }
-
-    @Test
-    public void testLeapYear_1900() {
-        assertFalse(dateDifferenceController.isLeapYear(1900), "1900 is not a leap year");
-    }
-
-    @Test
-    public void testLeapYear_1901() {
-        assertFalse(dateDifferenceController.isLeapYear(1901), "1901 is not a leap year");
-    }
-
-    @Test
-    public void testLeapYear_2000() {
-        assertTrue(dateDifferenceController.isLeapYear(2000), "2000 is a leap year");
-    }
-
-    @Test
-    public void testLeapYear_1996() {
-        assertTrue(dateDifferenceController.isLeapYear(1996), "1996 is a leap year");
     }
 
     @Test
@@ -130,33 +108,4 @@ class DateDifferenceControllerTest {
         ResponseEntity<Integer> response = dateDifferenceController.calculateDayDifference("00.01.1900", "29.02.1991");
         assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, response.getStatusCode(), "Controller thinks there is a day 0");
     }
-
-    @Test
-    public void testFromIsBeforeTo_daysApart() {
-        assertTrue(
-                dateDifferenceController.isFromDateBeforeToDate(new UnoDate("01.01.1980"), new UnoDate("04.01.1980")),
-                "4th of Jan is after 1st of Jan");
-    }
-
-    @Test
-    public void testFromIsBeforeTo_monthsApart() {
-        assertTrue(
-                dateDifferenceController.isFromDateBeforeToDate(new UnoDate("01.01.1980"), new UnoDate("01.03.1980")),
-                "March is after Jan");
-    }
-
-    @Test
-    public void testFromIsNotBeforeTo_daysApart() {
-        assertFalse(
-                dateDifferenceController.isFromDateBeforeToDate(new UnoDate("02.01.1980"), new UnoDate("01.01.1980")),
-                "2/1 is after 1/1");
-    }
-
-    @Test
-    public void testFromIsNotBeforeTo_monthsApart() {
-        assertFalse(
-                dateDifferenceController.isFromDateBeforeToDate(new UnoDate("02.04.1980"), new UnoDate("02.03.1980")),
-                "2/4 is after 2/3");
-    }
-
 }

@@ -4,6 +4,9 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 
+/**
+ * DTO class to save to DynamoDB
+ */
 @DynamoDBTable(tableName = "UnoDateRequests")
 public class UnoDateDTO {
     private String id;
@@ -24,17 +27,9 @@ public class UnoDateDTO {
         return id;
     }
 
-	public void setId(String id) {
-        this.id = id;
-    }
-
     @DynamoDBAttribute
     public String getFromDate() {
         return this.fromDate;
-    }
-
-    public void setFromDate(String fromDate) {
-        this.fromDate = fromDate;
     }
 
     @DynamoDBAttribute
@@ -42,17 +37,9 @@ public class UnoDateDTO {
         return this.toDate;
     }
 
-    public void setToDate(String toDate) {
-        this.toDate = toDate;
-    }
-
     @DynamoDBAttribute
     public Integer getDifference() {
         return this.difference;
-    }
-
-    public void setDifference(Integer difference) {
-        this.difference = difference;
     }
 
 }
